@@ -1,0 +1,30 @@
+name: Build and Release
+
+on:
+  push:
+    branches:
+      - master
+
+jobs:
+  build:
+    runs-on: ubuntu-latest
+
+    steps:
+    - name: Checkout Code
+      uses: actions/checkout@v2
+
+    - name: Set up Java Environment
+      uses: actions/setup-java@v1
+      with:
+        java-version: 19
+
+    - name: Build and Test
+      run: mvn clean package install
+
+    - name: Deploy to GitHub Releases
+      uses: actions/upload-artifact@v2
+      with:
+        name: ${{ env.GITHUB_REPOSITORY }}-v${{ env.GITHUB_SHA }}
+        path: target/*.jar
+    - name: LS
+      run: ls target
